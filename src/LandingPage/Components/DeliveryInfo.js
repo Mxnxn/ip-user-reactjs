@@ -1,6 +1,6 @@
 const DeliveryInfo = (props) => {
     return (
-        <div class="feature-area pt-100px">
+        <div class="feature-area pt-100px pb-100px" style={{ backgroundColor: "#EFEFEF" }}>
             <div class="container">
                 <div class="feature-wrapper">
                     <div class="single-feture-col">
@@ -10,7 +10,7 @@ const DeliveryInfo = (props) => {
                             </div>
                             <div class="feature-content">
                                 <h4 class="title">Free Shipping</h4>
-                                <span class="sub-title">Capped at $39 per order</span>
+                                <span class="sub-title">On order worth over ₹ 1999</span>
                             </div>
                         </div>
                     </div>
@@ -21,8 +21,8 @@ const DeliveryInfo = (props) => {
                                 <img src={require("../../assets/images/icons/2.png").default} alt="" />
                             </div>
                             <div class="feature-content">
-                                <h4 class="title">Card Payments</h4>
-                                <span class="sub-title">12 Months Installments</span>
+                                <h4 class="title">UPI Payments</h4>
+                                <span class="sub-title">Gpay/Paytm/PhonePay</span>
                             </div>
                         </div>
                     </div>
@@ -32,8 +32,8 @@ const DeliveryInfo = (props) => {
                                 <img src={require("../../assets/images/icons/3.png").default} alt="" />
                             </div>
                             <div class="feature-content">
-                                <h4 class="title">Easy Returns</h4>
-                                <span class="sub-title">Shop With Confidence</span>
+                                <h4 class="title">Fast Delivery</h4>
+                                <span class="sub-title">With Minimum charges</span>
                             </div>
                         </div>
                     </div>

@@ -9,7 +9,7 @@ const LandingPage = (props) => {
     return (
         <>
             <div class="section ">
-                <Swiper
+                {/* <Swiper
                     className={"hero-slider swiper-container slider-nav-style-1 slider-dot-style-1"}
                     slidesPerView={1}
                     navigation
@@ -95,12 +95,10 @@ const LandingPage = (props) => {
                             </div>
                         </SwiperSlide>
                     </div>
-                </Swiper>
+                </Swiper> */}
             </div>
-            <BestSellers />
             <ProductArea />
             <DeliveryInfo />
-            <FullProductBanner />
         </>
     );
 };

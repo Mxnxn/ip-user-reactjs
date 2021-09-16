@@ -1,0 +1,46 @@
+.overlap-all-p {
+    position: relative;
+    font-family: "Poppins", sans-serif;
+    letter-spacing: 2px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.overlap-all-p img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+.overlap-all-p span {
+    position: relative;
+    z-index: 1;
+    color: #000;
+    line-height: 40px;
+}
+.overlap-all-p span::after {
+    position: absolute;
+    width: 0%;
+    border-top: 2px solid #000;
+    content: "";
+    left: 0;
+    bottom: -5px;
+    transition: 0.4s ease;
+}
+.overlap-all-p:hover span::after {
+    width: 100%;
+}
+.that-box {
+    transition: 0.2s ease;
+}
+.that-box li {
+    display: flex !important;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.that-box:hover {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+}
