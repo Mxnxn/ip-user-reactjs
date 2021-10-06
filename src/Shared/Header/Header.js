@@ -151,9 +151,9 @@ const Header = ({ setOpenMenu }) => {
                                     </button>
                                     <ul id="header-users-btn" class="dropdown-menu dropdown-menu-right ">
                                         <li>
-                                            <a class="dropdown-item" href="my-account.html">
+                                            <Link class="dropdown-item" to="/myaccount">
                                                 My account
-                                            </a>
+                                            </Link>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" href="checkout.html">
@@ -161,9 +161,9 @@ const Header = ({ setOpenMenu }) => {
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="login.html">
+                                            <Link class="dropdown-item" to="/myaccount">
                                                 Sign in
-                                            </a>
+                                            </Link>
                                         </li>
                                     </ul>
                                 </div>
