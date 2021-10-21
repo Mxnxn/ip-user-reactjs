@@ -184,7 +184,7 @@ const ProductDetail = (props) => {
                                         <div className="flex-1 default-form-box mr-18">
                                             <input value={state.order.qty} onChange={(evt) => valueHandler(evt)} name="qty" placeholder="Quantity" />
                                         </div>
-                                        <button class="btn-upload-design" onClick={AddItemToCart} style={{ marginLeft: 0 }}>
+                                        <button class="btn-upload-design" onClick={uploadFile} style={{ marginLeft: 0 }}>
                                             Upload Design
                                         </button>
                                     </div>
