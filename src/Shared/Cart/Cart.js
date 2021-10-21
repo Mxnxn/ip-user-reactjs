@@ -1,7 +1,10 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { classManager } from "../helper/classManager";
 
 const Cart = ({ setOpenMenu }) => {
+    const { cart } = useSelector((state) => state.cart);
+    console.log(cart);
     return (
         <div id="offcanvas-wishlist" class={"offcanvas offcanvas-wishlist"}>
             <div class="inner">

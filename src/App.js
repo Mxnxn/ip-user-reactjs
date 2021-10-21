@@ -8,6 +8,10 @@ import { BrowserRouter, Route } from "react-router-dom";
 import AccountPage from "AccountPage/Components/AccountPage";
 import ByCategory from "Category/components/ByCategory";
 import Products from "Product/Products";
+import NotificationProvider from "Shared/Notification/NotificationProvider";
+import AuthRoute from "AccountPage/Components/AuthRoute";
+import AccountDetails from "AccountPage/Components/AccountDetails";
+import ProductDetail from "Product/ProductDetail";
 
 function App() {
     const [openMenu, setOpenMenu] = useState(false);
@@ -18,18 +22,22 @@ function App() {
 
     return (
         <BrowserRouter>
-            <div className="app " id="app-main" style={{ overflow: openMenu && "hidden" }}>
-                <Header setOpenMenu={setOpenMenu} />
-                <div class="offcanvas-overlay" style={{ display: openMenu && "block" }}></div>
-                <Cart setOpenMenu={setOpenMenu} />
-                <Route path="/" exact render={() => <LandingPage />} />
-                <Route path="/all" exact render={() => <Products />} />
-                <Route path="/category/:id" exact render={() => <ByCategory />} />
-                <Route path="/myaccount" render={() => <AccountPage />} />
+            <NotificationProvider>
+                <div className="app " id="app-main" style={{ overflow: openMenu && "hidden" }}>
+                    <Header setOpenMenu={setOpenMenu} />
+                    <div class="offcanvas-overlay" style={{ display: openMenu && "block" }}></div>
+                    <Cart setOpenMenu={setOpenMenu} />
+                    <Route path="/" exact render={() => <LandingPage />} />
+                    <Route path="/all" exact render={() => <Products />} />
+                    <Route path="/category/:id" exact render={() => <ByCategory />} />
+                    <Route path="/myaccount" exact render={() => <AccountPage />} />
+                    <Route path="/product/:id" exact render={() => <ProductDetail />} />
+                    <AuthRoute component={AccountDetails} path="/myaccount/details" exact />
 
-                <Footer />
-                <Search />
-            </div>
+                    <Footer />
+                    <Search />
+                </div>
+            </NotificationProvider>
         </BrowserRouter>
     );
 }

@@ -15,3 +15,11 @@ export const GetAllProducts = async () => {
         return error;
     }
 };
+
+export const GetAProducts = async (id) => {
+    try {
+        return ApiCall(`/product/get/${id}`);
+    } catch (error) {
+        return error;
+    }
+};

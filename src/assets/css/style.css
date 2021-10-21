@@ -4501,13 +4501,59 @@ Pages - My Account
 .dashboard_tab_button li .nav-link {
     font-weight: 500;
     color: #fff;
-    background-color: #000000;
-    font-size: 16px;
+    font-size: 14px;
     text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
     display: block;
+    cursor: pointer;
+    z-index: 3;
+    border-radius: 8px;
+    font-family: "Poppins", sans-serif;
 }
+
+.dashboard_tab_button li .nav-link:before {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 50px;
+    display: block;
+    margin-top: 0px;
+    top: 0;
+    width: 100%;
+    right: 0;
+    background: #090909;
+    transition: width 0.6s cubic-bezier(0.6, 0, 0.01, 0.99);
+    -webkit-transition: width 0.6s cubic-bezier(0.6, 0, 0.01, 0.99) 0, 2s;
+    z-index: -2;
+}
+
+.dashboard_tab_button li .nav-link:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 50px;
+    display: block;
+    margin-top: 0px;
+    top: 0;
+    right: 0;
+    background: #eaaa85;
+    transition: width 0.6s cubic-bezier(0.6, 0, 0.01, 0.99);
+    -webkit-transition: width 0.6s cubic-bezier(0.6, 0, 0.01, 0.99) 0, 2s;
+    z-index: -1;
+}
+
+.dashboard_tab_button li .nav-link:hover:after {
+    width: 100%;
+    left: 0;
+    background: #eaaa85;
+}
+
 .dashboard_tab_button li .nav-link.active {
-    background-color: #eaaa85;
+    background-color: #eaaa85 !important;
+}
+.dashboard_tab_button li .nav-link.active:before {
+    background-color: #eaaa85 !important;
 }
 
 .dashboard_content h4 {
@@ -4571,12 +4617,10 @@ Pages - My Account
     text-align: center;
 }
 .table_page tbody tr td {
-    border-right: 1px solid #ededed;
     font-weight: 500;
     text-transform: capitalize;
     font-size: 14px;
     text-align: center;
-    min-width: 150px;
 }
 .table_page tbody tr td a:hover {
     color: #eaaa85;
@@ -4591,7 +4635,6 @@ Pages - My Account
 
 .table_desc table tbody tr td:last-child,
 .table_page table thead tr:last-child th {
-    border-right: 0;
 }
 
 .default-form-box {
