@@ -28,7 +28,7 @@ const Login = ({ active }) => {
             window.localStorage.setItem("_e", response.message.email);
             window.localStorage.setItem("_u", response.message.uid);
             displaySnackbar({ head: "Kindly,", variant: "success", message: response.message.message });
-            return history.push("/myaccount/details");
+            return window.location.reload();
         } catch (error) {
             return setState({ ...state, error: error.message[0] });
         }
@@ -43,8 +43,8 @@ const Login = ({ active }) => {
             <div class="login-form-container">
                 <div class="login-register-form">
                     {state.error && <div class="alert alert-danger">{state.error}</div>}
-                    <input type="email" value={state.value.email} onChange={valueHandler} name="email" placeholder="Username" />
-                    <input type="password" value={state.value.password} onChange={valueHandler} name="password" placeholder="Password" />
+                    <input type="email" required value={state.value.email} onChange={valueHandler} name="email" placeholder="Username" />
+                    <input type="password" required value={state.value.password} onChange={valueHandler} name="password" placeholder="Password" />
                     <div class="button-box">
                         <div class="login-toggle-btn">
                             <button onClick={onSubmitHandler}>
@@ -166,7 +166,8 @@ const Register = ({ active }) => {
 };
 
 const AccountPage = (props) => {
-    const query = window.location.search.substr(1).split("=")[0];
+    const query = window.location.search.substr(1).split("=")[1];
+    console.log(query);
     const [tabs, setTabs] = useState(query === "login" ? true : false);
     useEffect(() => {
         document.body.scrollTo = 300;

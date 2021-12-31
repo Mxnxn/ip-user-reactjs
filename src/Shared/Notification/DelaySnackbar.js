@@ -17,6 +17,7 @@ const DelaySnackbar = () => {
                 <div
                     style={{
                         display: "flex",
+                        width: 350,
                         flexDirection: "row",
                         alignContent: "center",
                         padding: "1rem",

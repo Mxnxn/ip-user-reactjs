@@ -1,10 +1,16 @@
 import { GetUserWallet } from "Api/User";
 import React, { useEffect, useState } from "react";
+import { BiCheck } from "react-icons/bi";
+import { BsCaretDown, BsCaretDownFill, BsCaretUpFill } from "react-icons/bs";
 import { CgMoreVertical } from "react-icons/cg";
+import { IoAdd } from "react-icons/io5";
+import { useHistory } from "react-router";
 import PageHeader from "Shared/Header/PageHeader";
 import { getDate } from "Shared/Helpers";
 import DelaySnackbar from "Shared/Notification/DelaySnackbar";
 import Snackbar from "Shared/Notification/Snackbar";
+import AddToWallet from "./AddToWallet";
+import Wallet from "./Wallet";
 
 const AccountDetails = (props) => {
     const [tabs, setTabs] = useState("DASHBOARD");
@@ -16,10 +22,17 @@ const AccountDetails = (props) => {
         fetched: false,
     });
 
+    const history = useHistory();
+
     useEffect(() => {
         const fetch = async () => {
             const response = await GetUserWallet();
-            console.log(response);
+            if (response.code !== 200) {
+                window.localStorage.removeItem("_u");
+                window.localStorage.removeItem("_t");
+                window.localStorage.removeItem("_e");
+                history.replace("/myaccount");
+            }
             setState({
                 ...state,
                 fetched: true,
@@ -42,7 +55,14 @@ const AccountDetails = (props) => {
     const [moreMenu, setMoreMenu] = useState(-1);
 
     const snackBar = DelaySnackbar();
-    const mSnackBar = Snackbar();
+    const mSnackbar = Snackbar();
+
+    const [addToWallet, setAddToWallet] = useState({
+        open: false,
+        amount: 0,
+        file: null,
+        note: "",
+    });
 
     return (
         state.fetched && (
@@ -74,6 +94,16 @@ const AccountDetails = (props) => {
                                             </span>
                                         </li>
                                         <li>
+                                            <span
+                                                onClick={() => {
+                                                    setTabs("ADDTOWALLET");
+                                                }}
+                                                class={tabs === "ADDTOWALLET" ? "nav-link  active" : "nav-link "}
+                                            >
+                                                ADD TO WALLET
+                                            </span>
+                                        </li>
+                                        <li>
                                             {" "}
                                             <span
                                                 onClick={() => {
@@ -102,6 +132,7 @@ const AccountDetails = (props) => {
                                                     localStorage.removeItem("_t");
                                                     localStorage.removeItem("_u");
                                                     localStorage.removeItem("_e");
+                                                    window.location.reload();
                                                 }}
                                             >
                                                 Logout
@@ -161,86 +192,8 @@ const AccountDetails = (props) => {
                                             </table>
                                         </div>
                                     </div>
-                                    <div class={tabs === "WALLET" ? "tab-pane fade show active" : "tab-pane fade"} id="orders">
-                                        <div className="d-flex justify-content-between">
-                                            <h4 className="pp-l">Wallet</h4>
-                                            <h4 className="pp-b">{state.wallet.currentBalance} RS</h4>
-                                        </div>
-                                        <div className="my-2">
-                                            <p className="pp-l">
-                                                Note: Those with <span className="pp-b text-success">GREEN</span> has been added to wallet and{" "}
-                                                <span className="pp-b text-danger">RED</span> have rejected by us.
-                                            </p>
-                                        </div>
-                                        <div class="table_page table-responsive">
-                                            <table>
-                                                <thead>
-                                                    <tr>
-                                                        <th className="pp-b">Sr</th>
-                                                        <th className="pp-b">Date</th>
-                                                        <th className="pp-b">Amount</th>
-                                                        <th className="pp-b">#</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {state.wallet.balanceHistory.map((txn, idx) => (
-                                                        <tr>
-                                                            <td className="pp-l">{idx + 1}</td>
-                                                            <td className="pp-l">{getDate(txn.createdAt)}</td>
-                                                            <td className="pp-b">
-                                                                {txn.granted && <span class="text-success">{txn.balance} rs</span>}
-                                                                {txn.reject && <span class="text-danger">{txn.balance} rs</span>}
-                                                            </td>
-                                                            <td>
-                                                                <div class="block-verticalmore">
-                                                                    <button
-                                                                        className="btn-icon btn-sm"
-                                                                        onClick={() => setMoreMenu((prev) => (prev === idx ? -1 : idx))}
-                                                                    >
-                                                                        <CgMoreVertical />
-                                                                    </button>
-                                                                    <ul
-                                                                        onMouseLeave={() => setMoreMenu((prev) => (prev === idx ? -1 : idx))}
-                                                                        id="header-users-btn"
-                                                                        class={
-                                                                            moreMenu === idx
-                                                                                ? "dpdwn-menu dropdown-menu dropdown-menu-right show"
-                                                                                : "dpdwn-menu dropdown-menu dropdown-menu-right "
-                                                                        }
-                                                                    >
-                                                                        <li>
-                                                                            <a
-                                                                                class="dropdown-item pp-l fs-12"
-                                                                                target="_blank"
-                                                                                href={`${process.env.REACT_APP_API_URL}/${txn.file}`}
-                                                                            >
-                                                                                Uploaded Receipt
-                                                                            </a>
-                                                                        </li>
-                                                                        {txn.reject && (
-                                                                            <li>
-                                                                                <a
-                                                                                    class="dropdown-item pp-l fs-12"
-                                                                                    onClick={() => snackBar({ message: txn.reason })}
-                                                                                >
-                                                                                    Reason
-                                                                                </a>
-                                                                            </li>
-                                                                        )}
-                                                                        <li>
-                                                                            <a class="dropdown-item pp-l fs-12" href="/myaccount">
-                                                                                Generate Query
-                                                                            </a>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
+                                    <Wallet wallet={state.wallet} tabs={tabs} mSnackbar={mSnackbar} moreMenu={moreMenu} setMoreMenu={setMoreMenu} />
+                                    <AddToWallet tabs={tabs} mSnackbar={mSnackbar} />
                                     <div class={tabs === "ACCOUNT" ? "tab-pane fade show active" : "tab-pane fade"} id="account-details">
                                         <h3>Account details </h3>
                                         <div class="login">
@@ -283,7 +236,7 @@ const AccountDetails = (props) => {
                                                         <button
                                                             class="btn"
                                                             onClick={() =>
-                                                                mSnackBar({ variant: "success", head: "Account Details", message: "Successfully Saved." })
+                                                                mSnackbar({ variant: "success", head: "Account Details", message: "Successfully Saved." })
                                                             }
                                                         >
                                                             Save

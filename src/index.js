@@ -13,45 +13,45 @@ import "./assets/css/plugins/venobox.css";
 import "./assets/css/plugins/plugins.min.css";
 
 import "./assets/css/style.css";
-import { Provider } from "react-redux";
-import { createStore, combineReducers } from "redux";
-import CartReducer from "Redux/CartReducer";
-const rootReducer = combineReducers({
-    cart: CartReducer,
-});
+// import { Provider } from "react-redux";
+// import { createStore, combineReducers } from "redux";
+// import CartReducer from "Redux/CartReducer";
+// const rootReducer = combineReducers({
+//     cart: CartReducer,
+// });
 
-function loadFromLocal() {
-    try {
-        const state = localStorage.getItem("_c");
-        if (state === null) return undefined;
-        return JSON.parse(state);
-    } catch (err) {
-        console.log("error", err);
-    }
-}
+// function loadFromLocal() {
+//     try {
+//         const state = localStorage.getItem("_c");
+//         if (state === null) return undefined;
+//         return JSON.parse(state);
+//     } catch (err) {
+//         console.log("error", err);
+//     }
+// }
 
-const persistedState = loadFromLocal();
+// const persistedState = loadFromLocal();
 
-const store = createStore(rootReducer, persistedState);
+// const store = createStore(rootReducer, persistedState);
 
-store.subscribe(() => {
-    saveToLocal(store.getState());
-});
+// store.subscribe(() => {
+//     saveToLocal(store.getState());
+// });
 
-function saveToLocal(statex) {
-    try {
-        const state = JSON.stringify(statex);
-        localStorage.setItem("_c", state);
-    } catch (err) {
-        console.log(err);
-    }
-}
+// function saveToLocal(statex) {
+//     try {
+//         const state = JSON.stringify(statex);
+//         localStorage.setItem("_c", state);
+//     } catch (err) {
+//         console.log(err);
+//     }
+// }
 
 render(
     <React.StrictMode>
-        <Provider store={store}>
-            <App />
-        </Provider>
+        {/* <Provider store={store}> */}
+        <App />
+        {/* </Provider> */}
     </React.StrictMode>,
     document.getElementById("root")
 );

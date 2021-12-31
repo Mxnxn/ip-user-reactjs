@@ -1,20 +1,29 @@
 import { GetAProducts } from "Api/Product";
 import { useEffect, useState } from "react";
 import { AiOutlineFrown } from "react-icons/ai";
+import { BiCheck } from "react-icons/bi";
 import { BsCheckAll } from "react-icons/bs";
-import { useDispatch } from "react-redux";
-import { useParams } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { addItemToCart } from "Redux/CartAction";
+import { AllowedExtension } from "Shared/Constants";
+import { getPrice } from "Shared/helper/getPrice";
+import { AddItemToCart } from "Api/Cart";
 import SwiperCore, { Navigation, Controller, Thumbs } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-const ProductDetail = (props) => {
+import Snackbar from "Shared/Notification/Snackbar";
+import { classManager } from "Shared/helper/classManager";
+const ProductDetail = ({ setOpenMenu }) => {
+    const displaySnackbar = Snackbar();
     SwiperCore.use([Navigation, Thumbs]);
 
     const { id } = useParams();
-    const [state, setState] = useState({ product: {}, order: { len: null, height: null, qty: null }, dataFetched: false, alert: null });
+    const [state, setState] = useState({
+        product: {},
+        order: { len: null, height: null, qty: null, design: null, estimatedPrice: 0, eyelets: false },
+        dataFetched: false,
+        alert: null,
+    });
     const [controlledSwiper, setControlledSwiper] = useState(null);
-    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetch = async () => {
@@ -24,26 +33,63 @@ const ProductDetail = (props) => {
         fetch();
     }, [id]);
 
-    const AddItemToCart = () => {
-        console.log(!state.order.qty);
-        if (!state.order.qty) return setState({ ...state, alert: "Invalid Quantity" });
-        if (!state.product.sizeWithQty) {
-            setState({ ...state, order: { ...state.order, estimatedPrice: parseInt(state.order.qty) * parseInt(state.product.numericPrice) } });
-            // return dispatch(
-            //     addItemToCart({ ...state.product, orderQty: state.order.qty, estimatedPrice: parseInt(state.order.qty) * parseInt(state.product.numericPrice) })
-            // );
+    // const history = useHistory();
+    const onAddItemToCart = async () => {
+        // if (!localStorage.getItem("_u")) return history.replace("/myaccount");
+        setState({ ...state, alert: null });
+        const { product, order } = state;
+        if (!order.qty) return setState({ ...state, alert: "Invalid Quantity" });
+        const formData = new FormData();
+        formData.set("pid", product._id);
+        formData.set("name", product.name);
+        formData.set("price", product.price);
+        formData.set("numericPrice", product.numericPrice);
+        for (let i = 0; i < product.images.length; i++) {
+            const img = product.images[i];
+            formData.set(`images[${i}]`, img._id);
         }
-        if (state.order.len && state.order.height && state.order.len.length > 1 && state.order.height.length > 1) {
-            return setState({
+        for (let i = 0; i < product.category.length; i++) {
+            const cat = product.category[i];
+            formData.set(`category[${i}]`, cat._id);
+        }
+        formData.set("gsmOrMicron", product.gsmOrMicron);
+        formData.set("description", product.description);
+        formData.set("eyelets", order.eyelets);
+        formData.set("qty", order.qty);
+        formData.set("uid", localStorage.getItem("_u"));
+        formData.append("designFile", order.design);
+        if (!product.sizeWithQty) {
+            formData.set("rate", parseInt(order.qty) * parseInt(product.numericPrice));
+            setState({
+                ...state,
+                order: { ...order, estimatedPrice: parseInt(order.qty) * parseInt(product.numericPrice) },
+                alert: null,
+            });
+            const response = await AddItemToCart(formData);
+            console.log(response.message);
+            classManager("offcanvas-wishlist", "offcanvas-open");
+            setOpenMenu(true);
+            return displaySnackbar({ head: response.message[0], variant: "success", message: "Thank you!" });
+        }
+        if (Number(order.len) > 1 && Number(order.height) > 1) {
+            formData.set("rate", getPrice(order.len, order.height, product.sizes) * Number(product.numericPrice) * Number(order.qty));
+            formData.set("len", order.len);
+            formData.set("height", order.height);
+            setState({
                 ...state,
                 order: {
-                    ...state.order,
-                    estimatedPrice:
-                        parseInt(state.order.qty) * parseInt(state.product.numericPrice) * parseInt(state.order.length) * parseInt(state.order.height),
+                    ...order,
+                    estimatedPrice: getPrice(order.len, order.height, product.sizes) * Number(product.numericPrice) * Number(order.qty),
+                    alert: null,
                 },
             });
+            const response = await AddItemToCart(formData);
+            console.log(response.message);
+            classManager("offcanvas-wishlist", "offcanvas-open");
+            setOpenMenu(true);
+            return displaySnackbar({ head: response.message[0], variant: "success", message: "Thank you!" });
         } else {
-            setState({ ...state, alert: "Please fill below fields carefully!" });
+            return setState({ ...state, alert: "Please fill below fields carefully!" });
         }
     };
 
@@ -81,13 +127,13 @@ const ProductDetail = (props) => {
                                             <img
                                                 style={{ maxWidth: "100%", display: "block", width: "100%" }}
                                                 class="img-responsive m-auto"
-                                                src={process.env.REACT_APP_API_URL + "/uploads/" + imgObj.url}
+                                                src={process.env.REACT_APP_API_URL + "/" + imgObj.url}
                                                 alt=""
                                             />
                                             <img
                                                 role="presentation"
                                                 alt=""
-                                                src={process.env.REACT_APP_API_URL + "/uploads/" + imgObj.url}
+                                                src={process.env.REACT_APP_API_URL + "/" + imgObj.url}
                                                 class="zoomImg"
                                                 style={{
                                                     position: "absolute",
@@ -119,7 +165,7 @@ const ProductDetail = (props) => {
                                             role="group"
                                             aria-label="1 / 5"
                                         >
-                                            <img class="img-responsive m-auto" src={process.env.REACT_APP_API_URL + "/uploads/" + imgObject.url} alt="" />
+                                            <img class="img-responsive m-auto" src={process.env.REACT_APP_API_URL + "/" + imgObject.url} alt="" />
                                         </SwiperSlide>
                                     ))}
                                 </div>
@@ -154,7 +200,9 @@ const ProductDetail = (props) => {
                                 </div>
                                 {state.alert && (
                                     <div class="stock mt-30px">
-                                        <div className="alert alert-danger">{state.alert}</div>
+                                        <div className="alert alert-danger" style={{ lineHeight: 1.7 }}>
+                                            {state.alert}
+                                        </div>
                                     </div>
                                 )}
                                 <div class="stock mt-30px">
@@ -184,15 +232,63 @@ const ProductDetail = (props) => {
                                         <div className="flex-1 default-form-box mr-18">
                                             <input value={state.order.qty} onChange={(evt) => valueHandler(evt)} name="qty" placeholder="Quantity" />
                                         </div>
-                                        <button class="btn-upload-design" onClick={uploadFile} style={{ marginLeft: 0 }}>
-                                            Upload Design
+                                        <button
+                                            class={state.order.design ? "btn-upload-design-success btn-upload-design" : "btn-upload-design"}
+                                            onClick={() => {
+                                                document.getElementById("upld").click();
+                                            }}
+                                            style={{ marginLeft: 0 }}
+                                        >
+                                            {state.order.design ? "Design Uploaded" : "Upload Design"}
+                                            <BiCheck style={{ height: state.order.design ? 16 : 0, width: state.order.design ? 16 : 0, marginLeft: 6 }} />
                                         </button>
+                                        <input
+                                            type="file"
+                                            onChange={(evt) => {
+                                                if (!evt.target.files[0]) return setState({ ...state, alert: "Kindly, Upload Design with Instruction." });
+                                                let arr = evt.target.files[0].name.split(".");
+                                                let type = arr[arr.length - 1];
+                                                if (type.toLowerCase() === AllowedExtension) {
+                                                    setState({ ...state, order: { ...state.order, design: evt.target.files[0] } });
+                                                } else {
+                                                    setState({
+                                                        ...state,
+                                                        alert: "Please Upload CDR file with Instruction and Contact Information. Refer Help and Support for more Details.",
+                                                    });
+                                                }
+                                            }}
+                                            style={{ display: "none" }}
+                                            id="upld"
+                                        />
                                     </div>
                                 </div>
+                                {state.product.eyelets && (
+                                    <div class="d-flex">
+                                        <div class="d-flex">
+                                            <input
+                                                type="checkbox"
+                                                checked={state.order.eyelets}
+                                                onClick={() => setState((prev) => ({ ...state, order: { ...state.order, eyelets: !prev.order.eyelets } }))}
+                                                class="slide-checkbox"
+                                                name="slide1"
+                                                id="slide1"
+                                                required
+                                            />
+                                            <label for="slide1" class="checkbox mb20"></label>
+                                            <span style={{ marginLeft: 65, marginTop: 5 }}>Eyelets</span>
+                                        </div>
+                                    </div>
+                                )}
                                 <p class="mb-0">{state.product.description}</p>
+                                {!!state.order.estimatedPrice && (
+                                    <div class=" alert alert-info pro-details-categories-info pro-details-same-style d-flex">
+                                        <span>Estimated Price: </span>
+                                        Rs {state.order.estimatedPrice}
+                                    </div>
+                                )}
                                 <div class="pro-details-quality">
                                     <div class="pro-details-cart">
-                                        <button class="add-cart" onClick={AddItemToCart} style={{ marginLeft: 0 }}>
+                                        <button class="add-cart" onClick={onAddItemToCart} style={{ marginLeft: 0 }}>
                                             {" "}
                                             Add To Cart
                                         </button>
@@ -202,8 +298,10 @@ const ProductDetail = (props) => {
                                     <span>Categories: </span>
                                     <ul class="d-flex">
                                         {state.product.category.map((cat) => (
-                                            <li>
-                                                <Link to={`/category/${cat._id}`}>{cat.name}</Link>
+                                            <li className="btn-icon mr-18 px-2">
+                                                <Link className="text-white" to={`/category/${cat._id}`}>
+                                                    {cat.name}
+                                                </Link>
                                             </li>
                                         ))}
                                     </ul>

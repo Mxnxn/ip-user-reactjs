@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { GetCategories } from "Api/Category";
 import { IoBagHandleOutline } from "react-icons/io5";
 import { AiOutlineUser } from "react-icons/ai";
+import { FaUserLock } from "react-icons/fa";
 import { BiSearch } from "react-icons/bi";
 import { useHistory } from "react-router";
 gsap.registerPlugin(ScrollTrigger);
@@ -141,31 +142,15 @@ const Header = ({ setOpenMenu }) => {
                                     <BiSearch style={{ fontSize: 28 }} />
                                 </a>
                                 <div class="header-bottom-set dropdown ">
-                                    <button class="dropdown-toggle header-action-btn" data-bs-toggle="dropdown">
-                                        <AiOutlineUser
-                                            style={{ fontSize: 28 }}
-                                            onClick={() => {
-                                                classManager("header-users-btn", "show");
-                                            }}
-                                        />
-                                    </button>
-                                    <ul id="header-users-btn" class="dropdown-menu dropdown-menu-right ">
-                                        <li>
-                                            <Link class="dropdown-item" to="/myaccount">
-                                                My account
-                                            </Link>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="checkout.html">
-                                                Checkout
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <Link class="dropdown-item" to="/myaccount">
-                                                Sign in
-                                            </Link>
-                                        </li>
-                                    </ul>
+                                    {window.localStorage.getItem("_t") ? (
+                                        <Link className="dropdown-toggle header-action-btn" to="/myaccount">
+                                            <AiOutlineUser style={{ fontSize: 28 }} />
+                                        </Link>
+                                    ) : (
+                                        <Link className="dropdown-toggle header-action-btn" to="/myaccount">
+                                            <FaUserLock style={{ fontSize: 28 }} />
+                                        </Link>
+                                    )}
                                 </div>
 
                                 <a href="#offcanvas-cart" class="header-action-btn header-action-btn-cart offcanvas-toggle pr-0">

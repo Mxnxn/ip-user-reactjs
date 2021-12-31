@@ -136,8 +136,85 @@
     font-family: "Poppins", sans-serif;
     color: #fff;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     letter-spacing: 1px;
+}
+
+.btn-upload-design-success {
+    background: #146e44 !important;
+}
+
+.btn-upload-design-done {
+    background: #3ba45a !important;
+}
+
+.btn-upload-design-upi {
+    background: #1967d4 !important;
+}
+.btn-upload-design-netb {
+    background: #663abe !important;
+}
+
+.amount-select {
+    height: 45 px;
+    background: transparent;
+    border: 1 px solid rgba(155, 155, 155, 0.4);
+    padding: 0 20 px;
+    border-radius: 8 px;
+}
+
+.text-pending {
+    color: #1967d4 !important;
+}
+input[type="checkbox"] {
+    opacity: 0;
+}
+
+input[type="checkbox"].slide-checkbox + label {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 0;
+}
+
+input[type="checkbox"].slide-checkbox + label:before {
+    content: "";
+    width: 54px;
+    height: 32px;
+    position: absolute;
+    background-color: #bdc3c7;
+    border-radius: 16px;
+    top: 0;
+    left: 0;
+    transition: all 0.25s ease-in-out;
+}
+
+input[type="checkbox"].slide-checkbox + label:after {
+    content: "";
+    width: 28px;
+    height: 28px;
+    top: 2px;
+    left: 2px;
+    position: absolute;
+    background: #fafafa;
+    border-radius: 50%;
+    box-shadow: 0 2px 7px -2px rgba(0, 0, 0, 0.4), 1px 2px 1px rgba(0, 0, 0, 0.2);
+    transition: all 0.25s ease-in-out;
+}
+
+input[type="checkbox"].slide-checkbox:checked + label:before {
+    background-color: #eaaa85;
+}
+
+input[type="checkbox"].slide-checkbox:checked + label:after {
+    left: 24px;
+}
+
+/* Focus */
+
+input[type="checkbox"].slide-checkbox:focus + label:before {
+    border-color: #957adb;
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
 }

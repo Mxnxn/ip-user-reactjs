@@ -7,7 +7,7 @@ const Product = ({ prop }) => {
         <div class="product">
             <div class="thumb">
                 <Link to={`product/${prop._id}`} class="image">
-                    <img src={`${process.env.REACT_APP_API_URL}/uploads/${prop.images[0].url}`} alt="Product" />
+                    <img src={`${process.env.REACT_APP_API_URL}/${prop.images[0].url}`} alt="Product" />
                     {/* <img src={require(`../assets/images/product-image/${1}.jpg`).default} alt="Product" />
                     <img class="hover-image" src={require(`../assets/images/product-image/${1}.jpg`).default} alt="Product" /> */}
                 </Link>

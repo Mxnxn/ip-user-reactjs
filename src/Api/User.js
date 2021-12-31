@@ -27,3 +27,11 @@ export const GetUserWallet = async (formdata) => {
         return error;
     }
 };
+
+export const AddToWalletRequest = async (formdata) => {
+    try {
+        return ApiCall(`/user/wallet/add`, { headers: { "Content-Type": "application/json", "SESSION-TOKEN": localStorage.getItem("_t") } }, formdata);
+    } catch (error) {
+        return error;
+    }
+};
